@@ -19,6 +19,7 @@ body {
 }
 
 #control-button {
+  background-color: rgba(233, 179, 158, 0.87);
   position: absolute;
   bottom: 20px;
   padding: 10px 20px;
