@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Background</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: url('../assets/background.jpg') no-repeat center center/cover;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    #movie-image {
+      position: absolute;
+      width: 1060px; /* Adjust width */
+      height: auto; /* Maintain aspect ratio */
+      left: -1060px; /* Start fully off-screen to the left */
+      animation: move 30s linear infinite;
+    }
+
+    #control-button {
+      position: absolute;
+      bottom: 20px;
+      padding: 10px 20px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    #success-message,
+    #fail-message {
+      position: absolute;
+      top: 40%;
+      font-size: 24px;
+      font-weight: bold;
+      display: none; /* Hidden by default */
+    }
+
+    #success-message {
+      color: green;
+    }
+
+    #fail-message {
+      color: red;
+    }
+
+    @keyframes move {
+      0% {
+        left: -1060px; /* Start fully off-screen */
+      }
+      100% {
+        left: 100%; /* End fully off-screen on the right */
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Success and Fail Messages -->
+  <div id="success-message">Success! The image now fits inside the page!</div>
+  <div id="fail-message">Fail! The image does not fit inside the page.</div>
+
+  <!-- Movie Image -->
+  <img id="movie-image" src="assets/movine.png" alt="Movie Image">
+
+  <!-- Control Button -->
+  <button id="control-button">Stop Movement</button>
+
+  <script>
+    const movieImage = document.getElementById("movie-image");
+    const controlButton = document.getElementById("control-button");
+    const successMessage = document.getElementById("success-message");
+    const failMessage = document.getElementById("fail-message");
+    let isMoving = true;
+
+    // Stop or restart the animation
+    controlButton.addEventListener("click", () => {
+      if (isMoving) {
+        movieImage.style.animationPlayState = 'paused'; // Pause the animation
+        controlButton.textContent = "Resume Movement";
+        isMoving = false;
+
+        // Check if the image fully fits inside the screen
+        const rect = movieImage.getBoundingClientRect();
+        const screenWidth = window.innerWidth;
+
+        // If the image is fully inside the viewport (without being cut off)
+        if (rect.left >= 0 && rect.right <= screenWidth) {
+          successMessage.style.display = 'block'; // Show success message
+          failMessage.style.display = 'none'; // Hide fail message
+        } else {
+          failMessage.style.display = 'block'; // Show fail message
+          successMessage.style.display = 'none'; // Hide success message
+        }
+      } else {
+        movieImage.style.animationPlayState = 'running'; // Resume the animation
+        controlButton.textContent = "Stop Movement";
+        successMessage.style.display = 'none'; // Hide success message
+        failMessage.style.display = 'none'; // Hide fail message
+        isMoving = true;
+      }
+    });
+
+    // Continuously check the image position to see when it fully fits in the screen
+    function checkImagePosition() {
+      const rect = movieImage.getBoundingClientRect();
+      const screenWidth = window.innerWidth;
+
+      // If the image fits fully within the viewport horizontally
+      if (rect.left >= 0 && rect.right <= screenWidth) {
+        if (isMoving) {
+          movieImage.style.animationPlayState = 'paused'; // Pause the animation
+          controlButton.textContent = "Resume Movement";
+          isMoving = false;
+          successMessage.style.display = 'block'; // Show success message
+          failMessage.style.display = 'none'; // Hide fail message
+        }
+      } else {
+        failMessage.style.display = 'block'; // Show fail message if it doesn't fit
+        successMessage.style.display = 'none'; // Hide success message
+      }
+    }
+
+    // Check the position every 100ms to ensure the image is fitting
+    setInterval(checkImagePosition, 100);
+  </script>
+</body>
+</html>

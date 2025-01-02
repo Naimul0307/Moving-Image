@@ -1,0 +1,9 @@
+GIF-Game/
+├── index.html
+├── css/
+│   └── style.css
+├── js/
+│   └── app.js
+├── assets/
+│   ├── kojo.gif
+│   └── background.jpg
