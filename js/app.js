@@ -1,37 +1,40 @@
-// Get references to game elements
-const kojo = document.getElementById("kojo");
-const scoreBoard = document.getElementById("score-board");
+const movieImage = document.getElementById("movie-image");
+const controlButton = document.getElementById("control-button");
+const popup = document.getElementById("popup");
+const popupMessage = document.getElementById("popup-message");
+let isMoving = true;
 
-// Initialize score
-let score = 0;
+// Stop or restart the animation
+controlButton.addEventListener("click", () => {
+  if (isMoving) {
+    movieImage.style.animationPlayState = 'paused'; // Pause the animation
+    controlButton.textContent = "Resume Movement";
+    isMoving = false;
 
-// Function to move Kojo randomly
-function moveKojo() {
-  const containerWidth = window.innerWidth;
-  const containerHeight = window.innerHeight;
+    // Check if the image fully fits inside the screen
+    const rect = movieImage.getBoundingClientRect();
+    const screenWidth = window.innerWidth;
 
-  // Random position within the game container
-  const x = Math.random() * (containerWidth - kojo.offsetWidth);
-  const y = Math.random() * (containerHeight - kojo.offsetHeight);
-
-  // Move Kojo using GSAP
-  gsap.to(kojo, { x, y, duration: 0.8, ease: "power1.inOut" });
-}
-
-// Function to update score
-function updateScore() {
-  score++;
-  scoreBoard.textContent = `Score: ${score}`;
-}
-
-// Event listener for catching Kojo
-kojo.addEventListener("click", () => {
-  updateScore();
-  moveKojo();
+    // If the image is fully inside the viewport (without being cut off)
+    if (rect.left >= 0 && rect.right <= screenWidth) {
+      showPopup("Success!"); // Success popup
+    } else {
+      showPopup("Fail!"); // Fail popup
+    }
+  } else {
+    movieImage.style.animationPlayState = 'running'; // Resume the animation
+    controlButton.textContent = "Stop Movement";
+    isMoving = true;
+  }
 });
 
-// Move Kojo every second
-setInterval(moveKojo, 1000);
+// Show popup with a message
+function showPopup(message) {
+  popupMessage.textContent = message;
+  popup.style.display = 'block';
+}
 
-// Initial movement
-moveKojo();
+// Close popup
+function closePopup() {
+  popup.style.display = 'none';
+}
