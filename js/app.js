@@ -28,13 +28,20 @@ controlButton.addEventListener("click", () => {
   }
 });
 
-// Show popup with a message
+// Show popup with a message and redirect after 10 seconds
 function showPopup(message) {
   popupMessage.textContent = message;
   popup.style.display = 'block';
+
+  // Hide popup and redirect after 10 seconds
+  setTimeout(() => {
+    popup.style.display = 'none';
+    window.location.href = 'user.html'; // Redirect to user.html
+  }, 10000); // 10 seconds
 }
 
-// Close popup
+// Close popup and redirect immediately when the button is clicked
 function closePopup() {
   popup.style.display = 'none';
+  window.location.href = 'user.html'; // Redirect to user.html
 }
