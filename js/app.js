@@ -4,94 +4,85 @@ const popup = document.getElementById("popup");
 const popupMessage = document.getElementById("popup-message");
 let isMoving = true;
 
-// Stop or restart the animation using the control button
-controlButton.addEventListener("click", () => {
-  toggleImageMovement();
-});
-
-// Stop or restart the animation using the keyboard key (e.g., Space key)
+// Toggle Image Movement
+controlButton.addEventListener("click", () => toggleImageMovement());
 document.addEventListener("keydown", (event) => {
-  // Only allow keyboard control if the popup is not visible
   if (popup.style.display !== "block" && (event.key === " " || event.key === "Enter")) {
     toggleImageMovement();
   }
 });
 
-// Function to toggle image movement
 function toggleImageMovement() {
   if (isMoving) {
-    movieImage.style.animationPlayState = "paused"; // Pause the animation
+    movieImage.style.animationPlayState = "paused";
     controlButton.textContent = "Resume Movement";
     isMoving = false;
-
-    // Check if the image fully fits inside the screen
-    const rect = movieImage.getBoundingClientRect();
-    const screenWidth = window.innerWidth;
-    const screenHeight = window.innerHeight;
-
-    // Retrieve user data from local storage
-    const userData = JSON.parse(localStorage.getItem("userData")) || {
-      name: "Guest",
-      email: "Not provided",
-      phone: "Not provided",
-    };
-
-    // If the image is fully inside the viewport (without being cut off)
-    if (rect.left >= 0 && rect.right <= screenWidth && rect.top >= 0 && rect.bottom <= screenHeight) {
-      showPopup(
-        "Success!",
-        `Name: ${userData.name}`,
-        `Email: ${userData.email}`,
-        `Phone: ${userData.phone}`,
-        "success"
-      );
-    } else {
-      showPopup(
-        "Fail!",
-        `Name: ${userData.name}`,
-        `Email: ${userData.email}`,
-        `Phone: ${userData.phone}`,
-        "fail"
-      );
-    }
+    checkImageCoverage();
   } else {
-    movieImage.style.animationPlayState = "running"; // Resume the animation
+    movieImage.style.animationPlayState = "running";
     controlButton.textContent = "Stop Movement";
     isMoving = true;
+    movieImage.style.left = "-100%";
   }
 }
 
-// Show popup with a message and redirect after 10 seconds
-function showPopup(message, name, email, phone, messageType) {
-  // Set the main message and user data in the popup with the appropriate class
-  popupMessage.innerHTML = `<span class="popup-main-message ${messageType}">${message}</span><br><span class="popup-user-data">${name}</span><br><span class="popup-user-data">${email}</span><br><span class="popup-user-data">${phone}</span>`;
-  popup.style.display = "block";
+function checkImageCoverage() {
+  const rect = movieImage.getBoundingClientRect();
+  const screenWidth = window.innerWidth;
+  const screenHeight = window.innerHeight;
 
-  // Disable the control button while the popup is visible
-  controlButton.disabled = true;
+  const imageCenterX = rect.left + rect.width / 2;
+  const imageCenterY = rect.top + rect.height / 2;
+  const screenCenterX = screenWidth / 2;
+  const screenCenterY = screenHeight / 2;
 
-  // Disable the keyboard press while the popup is visible
-  document.removeEventListener("keydown", handleKeydown); // Remove the event listener
-
-  // Hide popup and redirect after 10 seconds
-  setTimeout(() => {
-    popup.style.display = "none";
-    controlButton.disabled = false; // Re-enable the control button
-    document.addEventListener("keydown", handleKeydown); // Re-enable the keyboard control
-    window.location.href = "user.html"; // Redirect to user.html
-  }, 10000); // 10 seconds
+  const tolerance = 5;
+  if (
+    Math.abs(imageCenterX - screenCenterX) <= tolerance &&
+    Math.abs(imageCenterY - screenCenterY) <= tolerance
+  ) {
+    showPopup("Congratulations! Image is centered.", "success");
+  } else {
+    showPopup("Sorry! Try again.", "fail");
+  }
 }
 
-// Close popup and redirect immediately when the button is clicked
+const userData = JSON.parse(localStorage.getItem("userData")) || {
+    name: "Guest",
+    email: "Not provided",
+    phone: "Not provided",
+  };
+
+  function showPopup(message, messageType) {
+    // Prepare the user data as a formatted string
+    const userInfo = `
+      <div>
+        <p><strong>Name:</strong> ${userData.name}</p>
+        <p><strong>Email:</strong> ${userData.email}</p>
+        <p><strong>Phone:</strong> ${userData.phone}</p>
+      </div>
+    `;
+  
+    // Set the popup message with the main message and user data
+    popupMessage.innerHTML = `
+      <span class="popup-main-message ${messageType}">${message}</span>
+      ${userInfo}
+    `;
+  
+    // Display the popup
+    popup.style.display = "block";
+    controlButton.disabled = true;
+  
+    // Hide the popup after 5 seconds
+    setTimeout(() => {
+      popup.style.display = "none";
+      controlButton.disabled = false;
+      window.location.href = "user.html";
+    }, 5000);
+  }
+gi  
 function closePopup() {
   popup.style.display = "none";
-  controlButton.disabled = false; // Re-enable the control button
-  window.location.href = "user.html"; // Redirect to user.html
-}
-
-// Handle keyboard events for toggling image movement
-function handleKeydown(event) {
-  if (event.key === " " || event.key === "Enter") {
-    toggleImageMovement();
-  }
+  controlButton.disabled = false;
+  window.location.href = "user.html";
 }
