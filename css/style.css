@@ -6,16 +6,18 @@ body {
   justify-content: center;
   align-items: center;
   background: url('../assets/background.jpg') no-repeat center center/cover;
-  height: 100vh;
   overflow: hidden;
+  height: 100vh; /* Ensure the body takes full viewport height */
+  width: 100vw; /* Ensure the body takes full viewport width */
 }
 
+/* Make movie image responsive for all screen sizes */
 #movie-image {
   position: absolute;
-  width: 1080px; /* Adjust width to fit the full screen */
-  height: 1920px; /* Ensure the height matches the screen height */
-  left: -1080px; /* Start fully off-screen to the left */
-  animation: move 5s linear infinite; /* Adjust the animation speed */
+  width:1080px;
+  height:1920px;
+  left:-1080px;
+  animation: move 25s linear infinite; /* Adjust the animation speed */
 }
 
 #control-button {
@@ -23,11 +25,12 @@ body {
   position: absolute;
   bottom: 20px;
   padding: 10px 20px;
-  font-size: 30px;
+  font-size: 3vw; /* Adjust button size based on viewport width */
   font-weight: bolder;
   cursor: pointer;
 }
 
+/* Keyframe move animation */
 @keyframes move {
   0% {
     left: -1060px; /* Start fully off-screen */
@@ -40,7 +43,8 @@ body {
 /* Modal styles */
 #popup {
   position: fixed;
-  width: 1000px;
+  width: 80%; /* Make the width responsive */
+  max-width: 1000px; /* Ensure it doesn't grow too large */
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -49,13 +53,15 @@ body {
   padding: 30px;
   border-radius: 10px;
   display: none;
-  text-align: center; /* Center-align text */
+  text-align: center;
+  overflow-y: auto;
+  max-height: 90%; /* Ensure it doesn't overflow the viewport */
 }
 
 /* Main message in the popup */
 .popup-main-message {
-  font-size: 2em;  /* Larger font size for the main message */
-  font-weight: bold; /* Bold font */
+  font-size: 2.5em;  /* Larger font size for the main message */
+  font-weight: bold;
 }
 
 /* Success message color */
@@ -70,8 +76,8 @@ body {
 
 /* User data in the popup */
 .popup-user-data {
-  font-size: 1.2em;  /* Smaller font size for user data */
-  font-weight: normal; /* Normal weight for the user data */
+  font-size: 1.5em;  /* Increase font size for readability */
+  font-weight: normal;
   margin-top: 5px;
 }
 
@@ -83,9 +89,47 @@ body {
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 18px; /* Increased button font size */
+  font-size: 18px;
 }
 
 #popup button:hover {
   background-color: #45a049;
+}
+
+/* Media query for smaller screens (portrait mode) */
+@media (max-width: 1080px) and (max-height: 1920px) {
+  body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* Adjust button size for smaller screens */
+  #control-button {
+    font-size: 5vw;
+    bottom: 10px;
+  }
+
+  /* Adjust movie image size */
+  #movie-image {
+    position: absolute;
+    width:1080px;
+    height:1920px;
+    left:-1080px;
+  }
+
+  /* Popup width adjustments for smaller screens */
+  #popup {
+    width: 90%;
+    padding: 15px;
+  }
+
+  .popup-main-message {
+    font-size: 2em;
+  }
+
+  .popup-user-data {
+    font-size: 1.2em;
+  }
 }

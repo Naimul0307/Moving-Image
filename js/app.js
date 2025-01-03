@@ -27,6 +27,7 @@ function toggleImageMovement() {
     // Check if the image fully fits inside the screen
     const rect = movieImage.getBoundingClientRect();
     const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight;
 
     // Retrieve user data from local storage
     const userData = JSON.parse(localStorage.getItem("userData")) || {
@@ -36,7 +37,7 @@ function toggleImageMovement() {
     };
 
     // If the image is fully inside the viewport (without being cut off)
-    if (rect.left >= 0 && rect.right <= screenWidth) {
+    if (rect.left >= 0 && rect.right <= screenWidth && rect.top >= 0 && rect.bottom <= screenHeight) {
       showPopup(
         "Success!",
         `Name: ${userData.name}`,
