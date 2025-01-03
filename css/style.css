@@ -12,10 +12,10 @@ body {
 
 #movie-image {
   position: absolute;
-  width: 1060px; /* Adjust width */
-  height: auto; /* Maintain aspect ratio */
-  left: -1060px; /* Start fully off-screen to the left */
-  animation: move 3s linear infinite;
+  width: 1080px; /* Adjust width to fit the full screen */
+  height: 1920px; /* Ensure the height matches the screen height */
+  left: -1080px; /* Start fully off-screen to the left */
+  animation: move 5s linear infinite; /* Adjust the animation speed */
 }
 
 #control-button {
@@ -49,10 +49,33 @@ body {
   padding: 30px;
   border-radius: 10px;
   display: none;
-  font-size: 30px; /* Increased font size */
   text-align: center; /* Center-align text */
 }
 
+/* Main message in the popup */
+.popup-main-message {
+  font-size: 2em;  /* Larger font size for the main message */
+  font-weight: bold; /* Bold font */
+}
+
+/* Success message color */
+.popup-main-message.success {
+  color: green; /* Green color for success */
+}
+
+/* Fail message color */
+.popup-main-message.fail {
+  color: red; /* Red color for fail */
+}
+
+/* User data in the popup */
+.popup-user-data {
+  font-size: 1.2em;  /* Smaller font size for user data */
+  font-weight: normal; /* Normal weight for the user data */
+  margin-top: 5px;
+}
+
+/* Close button styles */
 #popup button {
   background-color: #4CAF50;
   color: white;
